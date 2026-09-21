@@ -61,7 +61,7 @@ def validate(row: dict[str, str]) -> tuple[dict[str, object] | None, list[str]]:
         if price < 0:
             reasons.append("INVALID_PRICE")
     except InvalidOperation:
-        price = Decimal("0")
+        price = Decimal(0)
         reasons.append("INVALID_PRICE")
     if reasons:
         return None, sorted(set(reasons))
