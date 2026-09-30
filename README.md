@@ -33,6 +33,6 @@ IDs reject one row. A structurally unusable file—such as missing required colu
 the run. This boundary lets a daily feed make progress without accepting ambiguity about
 its contract.
 
-See the [processing flow](docs/flow.md) and [operator runbook](docs/runbook.md) for the
-replay and recovery model.
+See the [data contract](docs/data-contract.md), [processing flow](docs/flow.md), and
+[operator runbook](docs/runbook.md) for validation, replay, and recovery details.
 
