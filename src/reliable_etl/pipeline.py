@@ -58,21 +58,26 @@ def validate(row: dict[str, str]) -> tuple[dict[str, object] | None, list[str]]:
         reasons.append("INVALID_QUANTITY")
     try:
         price = Decimal(row.get("unit_price", ""))
-        if price < 0:
+        if not price.is_finite() or price < 0:
             reasons.append("INVALID_PRICE")
     except InvalidOperation:
         price = Decimal(0)
         reasons.append("INVALID_PRICE")
     if reasons:
         return None, sorted(set(reasons))
+    try:
+        unit_price = price.quantize(Decimal("0.01"))
+        amount = (price * quantity).quantize(Decimal("0.01"))
+    except InvalidOperation:
+        return None, ["INVALID_PRICE"]
     return {
         "transaction_id": row["transaction_id"].strip(),
         "transaction_date": parsed_date.isoformat(),
         "customer_id": row["customer_id"].strip(),
         "product_id": row["product_id"].strip(),
         "quantity": quantity,
-        "unit_price": str(price.quantize(Decimal("0.01"))),
-        "amount": str((price * quantity).quantize(Decimal("0.01"))),
+        "unit_price": str(unit_price),
+        "amount": str(amount),
     }, []
 
 

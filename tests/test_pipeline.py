@@ -18,6 +18,16 @@ def test_validation_reports_multiple_problems():
     assert "MISSING_REQUIRED:customer_id" in reasons
 
 
+@pytest.mark.parametrize("price", ["NaN", "Infinity", "1e999"])
+def test_non_finite_or_unrepresentable_price_is_rejected(price):
+    clean, reasons = validate({
+        "transaction_id": "T1", "transaction_date": "2025-01-01", "customer_id": "C1",
+        "product_id": "P1", "quantity": "1", "unit_price": price,
+    })
+    assert clean is None
+    assert "INVALID_PRICE" in reasons
+
+
 def test_ingest_is_idempotent_and_audited(tmp_path: Path):
     source = Path(__file__).parents[1] / "data/inbox/transactions_2025-07-01.csv"
     database = tmp_path / "reporting.db"

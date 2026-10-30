@@ -36,3 +36,10 @@ its contract.
 See the [data contract](docs/data-contract.md), [processing flow](docs/flow.md), and
 [operator runbook](docs/runbook.md) for validation, replay, and recovery details.
 
+## Limit
+
+A failed file with unchanged content cannot be retried in the same database: the run table
+keeps its unique content hash for the failed attempt. Correcting the file changes its hash
+and allows a new run. A production ingestion service should support retrying transient
+failures without altering the source file.
+
