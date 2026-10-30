@@ -36,3 +36,8 @@ its contract.
 See the [data contract](docs/data-contract.md), [processing flow](docs/flow.md), and
 [operator runbook](docs/runbook.md) for validation, replay, and recovery details.
 
+## Retry and recovery
+
+Failed content can be retried unchanged. Each attempt keeps its own audit record; only
+successful file hashes are unique. Existing databases are migrated without dropping facts
+or rejected records. A crash can leave a RUNNING audit entry; retrying creates a new attempt.
