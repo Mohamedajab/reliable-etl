@@ -16,7 +16,7 @@ IDs will be quarantined rather than duplicated.
 ## Failed run
 
 A structural failure (for example, a missing header) rolls back facts and rejects, then
-marks the run `FAILED` with the exception text. Fix the file and submit changed content.
+marks the run `FAILED` with the exception text. Fix the file when its structure is invalid. For a transient failure, retry the same file unchanged; every attempt retains its audit record.
 Do not edit the reporting tables by hand.
 
 ## Recovery guarantee

@@ -3,7 +3,7 @@ PRAGMA foreign_keys = ON;
 CREATE TABLE IF NOT EXISTS etl_run (
     run_id TEXT PRIMARY KEY,
     file_name TEXT NOT NULL,
-    file_sha256 TEXT NOT NULL UNIQUE,
+    file_sha256 TEXT NOT NULL,
     started_at TEXT NOT NULL,
     finished_at TEXT,
     status TEXT NOT NULL CHECK(status IN ('RUNNING', 'SUCCEEDED', 'FAILED')),

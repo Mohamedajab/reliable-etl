@@ -45,19 +45,19 @@ def validate(row: dict[str, str]) -> tuple[dict[str, object] | None, list[str]]:
     if missing:
         reasons.append("MISSING_REQUIRED:" + ",".join(missing))
     try:
-        parsed_date = date.fromisoformat(row.get("transaction_date", ""))
+        parsed_date = date.fromisoformat(row.get("transaction_date") or "")
     except ValueError:
         parsed_date = None
         reasons.append("INVALID_DATE")
     try:
-        quantity = int(row.get("quantity", ""))
+        quantity = int(row.get("quantity") or "")
         if quantity <= 0:
             reasons.append("INVALID_QUANTITY")
     except ValueError:
         quantity = 0
         reasons.append("INVALID_QUANTITY")
     try:
-        price = Decimal(row.get("unit_price", ""))
+        price = Decimal(row.get("unit_price") or "")
         if not price.is_finite() or price < 0:
             reasons.append("INVALID_PRICE")
     except InvalidOperation:
@@ -82,7 +82,29 @@ def validate(row: dict[str, str]) -> tuple[dict[str, object] | None, list[str]]:
 
 
 def initialise(connection: sqlite3.Connection) -> None:
+    # Existing databases used a global UNIQUE hash, which also blocked failed retries.
+    existing = connection.execute("SELECT sql FROM sqlite_master WHERE name='etl_run'").fetchone()
+    if existing and "file_sha256 TEXT NOT NULL UNIQUE" in existing[0]:
+        connection.execute("PRAGMA foreign_keys = OFF")
+        try:
+            create = existing[0].replace("etl_run", "etl_run_new", 1).replace(
+                "file_sha256 TEXT NOT NULL UNIQUE", "file_sha256 TEXT NOT NULL"
+            )
+            connection.executescript(
+                "BEGIN IMMEDIATE;" + create + ";"
+                "INSERT INTO etl_run_new SELECT * FROM etl_run;"
+                "DROP TABLE etl_run; ALTER TABLE etl_run_new RENAME TO etl_run; COMMIT;"
+            )
+        except Exception:
+            connection.rollback()
+            raise
+        finally:
+            connection.execute("PRAGMA foreign_keys = ON")
     connection.executescript(SCHEMA)
+    connection.execute(
+        "CREATE UNIQUE INDEX IF NOT EXISTS succeeded_file_hash "
+        "ON etl_run(file_sha256) WHERE status = 'SUCCEEDED'"
+    )
 
 
 def ingest(path: Path, database: Path) -> RunResult:
