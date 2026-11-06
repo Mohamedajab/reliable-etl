@@ -1,4 +1,4 @@
-"""Repeatable CLI recovery evidence using a temporary database, never user data."""
+"""Run a recovery example in a temporary database."""
 import argparse
 import html
 import json
@@ -43,7 +43,7 @@ def demonstrate(output: Path):
     output.mkdir(parents=True, exist_ok=True)
     (output / "operational-demo.json").write_text(json.dumps(events, indent=2), encoding="utf-8")
     rows = "".join("<tr>" + "".join(f"<td>{html.escape(str(e[k]))}</td>" for k in ("step", "exit_code", "facts", "rejected_records", "duration_ms")) + "</tr>" for e in events)
-    (output / "operational-demo.html").write_text('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>ReliableETL operational evidence</title><style>body{font:16px system-ui;margin:24px}div{overflow:auto}td,th{padding:12px;border:1px solid #aaa}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><h1>ReliableETL recovery demonstration</h1><p>Measured subprocess outcomes and actual SQLite audit records. A temporary database is discarded after each demonstration.</p><div><table><tr><th>Step</th><th>Process exit</th><th>Facts</th><th>Rejected rows</th><th>ms</th></tr>' + rows + '</table></div><h2>Actual audit evidence</h2><pre>' + html.escape(json.dumps(events, indent=2)) + '</pre></html>', encoding="utf-8")
+    (output / "operational-demo.html").write_text('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>ReliableETL run results</title><style>body{font:16px system-ui;margin:24px}div{overflow:auto}td,th{padding:12px;border:1px solid #aaa}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><h1>ReliableETL recovery demonstration</h1><p>Command results and SQLite run records. The temporary database is removed when the example finishes.</p><div><table><tr><th>Step</th><th>Process exit</th><th>Facts</th><th>Rejected rows</th><th>ms</th></tr>' + rows + '</table></div><h2>Run records</h2><pre>' + html.escape(json.dumps(events, indent=2)) + '</pre></html>', encoding="utf-8")
     return events
 
 
