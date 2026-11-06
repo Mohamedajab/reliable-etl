@@ -38,6 +38,13 @@ See the [data contract](docs/data-contract.md), [processing flow](docs/flow.md),
 
 ## Retry and recovery
 
+Run `python scripts/operational_demo.py` for an isolated, repeatable operational
+demonstration. Its [HTML evidence](docs/evidence/operational-demo.html) and
+[JSON audit records](docs/evidence/operational-demo.json) show accepted/rejected
+rows, identical replay, malformed-file failure and corrected recovery. Each run
+uses a new temporary database. Existing ingestion exceptions already produce a
+nonzero CLI exit; the demonstration verifies that behaviour without changing it.
+
 Failed content can be retried unchanged. Each attempt keeps its own audit record; only
 successful file hashes are unique. Existing databases are migrated without dropping facts
 or rejected records. A crash can leave a RUNNING audit entry; retrying creates a new attempt.
