@@ -1,0 +1,106 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>ReliableETL run results</title><style>body{font:16px system-ui;margin:24px}div{overflow:auto}td,th{padding:12px;border:1px solid #aaa}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><h1>ReliableETL recovery demonstration</h1><p>Command results and SQLite run records. The temporary database is removed when the example finishes.</p><div><table><tr><th>Step</th><th>Process exit</th><th>Facts</th><th>Rejected rows</th><th>ms</th></tr><tr><td>accepted-and-rejected</td><td>0</td><td>1</td><td>1</td><td>240.37</td></tr><tr><td>identical-replay</td><td>0</td><td>1</td><td>1</td><td>185.08</td></tr><tr><td>malformed-file</td><td>1</td><td>1</td><td>1</td><td>191.77</td></tr><tr><td>corrected-recovery</td><td>0</td><td>2</td><td>1</td><td>202.57</td></tr></table></div><h2>Run records</h2><pre>[
+  {
+    &quot;step&quot;: &quot;accepted-and-rejected&quot;,
+    &quot;timestamp&quot;: &quot;2026-11-06T13:32:38.007834+00:00&quot;,
+    &quot;duration_ms&quot;: 240.37,
+    &quot;exit_code&quot;: 0,
+    &quot;cli_output&quot;: &quot;SUCCEEDED: run=7635614e-cadf-4b40-beee-47f701cc75cd read=2 accepted=1 rejected=1 (load committed)&quot;,
+    &quot;failure_type&quot;: null,
+    &quot;runs&quot;: [
+      {
+        &quot;run_id&quot;: &quot;7635614e-cadf-4b40-beee-47f701cc75cd&quot;,
+        &quot;status&quot;: &quot;SUCCEEDED&quot;,
+        &quot;rows_read&quot;: 2,
+        &quot;rows_accepted&quot;: 1,
+        &quot;rows_rejected&quot;: 1,
+        &quot;error_message&quot;: null
+      }
+    ],
+    &quot;facts&quot;: 1,
+    &quot;rejected_records&quot;: 1
+  },
+  {
+    &quot;step&quot;: &quot;identical-replay&quot;,
+    &quot;timestamp&quot;: &quot;2026-11-06T13:32:38.192994+00:00&quot;,
+    &quot;duration_ms&quot;: 185.08,
+    &quot;exit_code&quot;: 0,
+    &quot;cli_output&quot;: &quot;SKIPPED: run=7635614e-cadf-4b40-beee-47f701cc75cd read=2 accepted=1 rejected=1 (file content already processed)&quot;,
+    &quot;failure_type&quot;: null,
+    &quot;runs&quot;: [
+      {
+        &quot;run_id&quot;: &quot;7635614e-cadf-4b40-beee-47f701cc75cd&quot;,
+        &quot;status&quot;: &quot;SUCCEEDED&quot;,
+        &quot;rows_read&quot;: 2,
+        &quot;rows_accepted&quot;: 1,
+        &quot;rows_rejected&quot;: 1,
+        &quot;error_message&quot;: null
+      }
+    ],
+    &quot;facts&quot;: 1,
+    &quot;rejected_records&quot;: 1
+  },
+  {
+    &quot;step&quot;: &quot;malformed-file&quot;,
+    &quot;timestamp&quot;: &quot;2026-11-06T13:32:38.385344+00:00&quot;,
+    &quot;duration_ms&quot;: 191.77,
+    &quot;exit_code&quot;: 1,
+    &quot;cli_output&quot;: &quot;&quot;,
+    &quot;failure_type&quot;: &quot;ValueError&quot;,
+    &quot;runs&quot;: [
+      {
+        &quot;run_id&quot;: &quot;7635614e-cadf-4b40-beee-47f701cc75cd&quot;,
+        &quot;status&quot;: &quot;SUCCEEDED&quot;,
+        &quot;rows_read&quot;: 2,
+        &quot;rows_accepted&quot;: 1,
+        &quot;rows_rejected&quot;: 1,
+        &quot;error_message&quot;: null
+      },
+      {
+        &quot;run_id&quot;: &quot;65d40339-de00-4c3b-aacb-0177d84ad499&quot;,
+        &quot;status&quot;: &quot;FAILED&quot;,
+        &quot;rows_read&quot;: 0,
+        &quot;rows_accepted&quot;: 0,
+        &quot;rows_rejected&quot;: 0,
+        &quot;error_message&quot;: &quot;file header must include [&#x27;customer_id&#x27;, &#x27;product_id&#x27;, &#x27;quantity&#x27;, &#x27;transaction_date&#x27;, &#x27;transaction_id&#x27;, &#x27;unit_price&#x27;]&quot;
+      }
+    ],
+    &quot;facts&quot;: 1,
+    &quot;rejected_records&quot;: 1
+  },
+  {
+    &quot;step&quot;: &quot;corrected-recovery&quot;,
+    &quot;timestamp&quot;: &quot;2026-11-06T13:32:38.588788+00:00&quot;,
+    &quot;duration_ms&quot;: 202.57,
+    &quot;exit_code&quot;: 0,
+    &quot;cli_output&quot;: &quot;SUCCEEDED: run=e57869e3-5f9d-40fb-be8c-2392258e08a3 read=1 accepted=1 rejected=0 (load committed)&quot;,
+    &quot;failure_type&quot;: null,
+    &quot;runs&quot;: [
+      {
+        &quot;run_id&quot;: &quot;7635614e-cadf-4b40-beee-47f701cc75cd&quot;,
+        &quot;status&quot;: &quot;SUCCEEDED&quot;,
+        &quot;rows_read&quot;: 2,
+        &quot;rows_accepted&quot;: 1,
+        &quot;rows_rejected&quot;: 1,
+        &quot;error_message&quot;: null
+      },
+      {
+        &quot;run_id&quot;: &quot;65d40339-de00-4c3b-aacb-0177d84ad499&quot;,
+        &quot;status&quot;: &quot;FAILED&quot;,
+        &quot;rows_read&quot;: 0,
+        &quot;rows_accepted&quot;: 0,
+        &quot;rows_rejected&quot;: 0,
+        &quot;error_message&quot;: &quot;file header must include [&#x27;customer_id&#x27;, &#x27;product_id&#x27;, &#x27;quantity&#x27;, &#x27;transaction_date&#x27;, &#x27;transaction_id&#x27;, &#x27;unit_price&#x27;]&quot;
+      },
+      {
+        &quot;run_id&quot;: &quot;e57869e3-5f9d-40fb-be8c-2392258e08a3&quot;,
+        &quot;status&quot;: &quot;SUCCEEDED&quot;,
+        &quot;rows_read&quot;: 1,
+        &quot;rows_accepted&quot;: 1,
+        &quot;rows_rejected&quot;: 0,
+        &quot;error_message&quot;: null
+      }
+    ],
+    &quot;facts&quot;: 2,
+    &quot;rejected_records&quot;: 1
+  }
+]</pre></html>
